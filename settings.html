@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Settings - Alexandria</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: white;
+      font-family: "Times New Roman", Times, serif;
+      color: black;
+    }
+
+    #topBar {
+      padding: 15px 20px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #backBtn {
+      font-size: 1rem;
+      color: #4a6fa5;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    #pageTitle {
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    #settingsArea {
+      padding: 20px;
+    }
+
+    .settingSection {
+      margin-bottom: 30px;
+    }
+
+    .settingSection h3 {
+      font-weight: normal;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+    }
+
+    .settingSection p {
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    .settingBtn {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      padding: 12px 20px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .settingBtn:active {
+      background-color: #3a5a85;
+    }
+
+    #importInput {
+      display: none;
+    }
+
+    #importStatus {
+      margin-top: 10px;
+      color: #4a6fa5;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="topBar">
+  <a id="backBtn" href="home.html">← Back</a>
+  <h1 id="pageTitle">Settings</h1>
+</div>
+
+<div id="settingsArea">
+
+  <div class="settingSection">
+    <h3>Backup</h3>
+    <p>Save all your notes and tags to a file on your device.</p>
+    <button class="settingBtn" onclick="exportNotes()">Export Notes</button>
+  </div>
+
+  <div class="settingSection">
+    <h3>Restore</h3>
+    <p>Load notes from a previously exported backup file. This will replace your current notes.</p>
+    <button class="settingBtn" onclick="document.getElementById('importInput').click()">Import Notes</button>
+    <input type="file" id="importInput" accept=".json" onchange="importNotes(event)">
+    <p id="importStatus"></p>
+  </div>
+
+</div>
+
+<script src="alexandria.js"></script>
+<script>
+  function exportNotes() {
+    const backupData = {
+      notes: notes,
+      tagColors: tagColors
+    };
+
+    const jsonString = JSON.stringify(backupData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const dateStamp = new Date().toISOString().split('T')[0];
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'alexandria-backup-' + dateStamp + '.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function importNotes(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const backupData = JSON.parse(e.target.result);
+
+        if (!backupData.notes || !Array.isArray(backupData.notes)) {
+          throw new Error('Invalid backup file format');
+        }
+
+        notes = backupData.notes;
+        tagColors = backupData.tagColors || {};
+
+        localStorage.setItem('notes', JSON.stringify(notes));
+        localStorage.setItem('tagColors', JSON.stringify(tagColors));
+
+        const status = document.getElementById('importStatus');
+        status.textContent = 'Import successful! ' + notes.length + ' notes loaded.';
+        status.style.display = 'block';
+      } catch (err) {
+        const status = document.getElementById('importStatus');
+        status.textContent = 'Import failed: file is not a valid backup.';
+        status.style.display = 'block';
+      }
+    };
+    reader.readAsText(file);
+  }
+</script>
+
+</body>
+</html>

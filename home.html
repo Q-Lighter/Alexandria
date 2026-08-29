@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alexandria</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: white;
+      font-family: "Times New Roman", Times, serif;
+      color: black;
+    }
+
+    #greeting {
+      padding: 30px 20px 10px 20px;
+    }
+
+    #greeting h1 {
+      font-size: 1.8rem;
+      font-weight: normal;
+      margin: 0 0 5px 0;
+    }
+
+    #greeting p {
+      font-size: 1rem;
+      color: #555;
+      margin: 0;
+    }
+
+    #boxContainer {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .navBox {
+      border: 2px solid black;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: white;
+    }
+
+    .navBox:active {
+      background-color: #eef3fa;
+      border-color: #4a6fa5;
+    }
+
+    .navBox h3 {
+      margin: 0;
+      font-weight: normal;
+      font-size: 1.1rem;
+    }
+
+    #writeBox {
+      grid-column: 1 / span 2;
+      padding: 30px 20px;
+    }
+
+    /* Modal */
+    #nameModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #nameModal.hidden {
+      display: none;
+    }
+
+    #modalBox {
+      background-color: white;
+      border: 2px solid black;
+      border-radius: 12px;
+      padding: 25px;
+      width: 260px;
+      text-align: center;
+    }
+
+    #modalBox input {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      padding: 8px;
+      width: 90%;
+      margin: 15px 0;
+      border: 1px solid #999;
+      border-radius: 6px;
+    }
+
+    #modalBox button {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      padding: 8px 20px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+#settingsButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-decoration: none;
+  color: black;
+}
+#settingsButton::before {
+  content: "\2699\FE0E";
+  color: black;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="greeting">
+  <h1 id="greetingText">Hi there,</h1>
+  <p>How can I help you today?</p>
+</div>
+
+<div id="boxContainer">
+  <div class="navBox" onclick="location.href='notes.html'">
+    <h3>Notes</h3>
+  </div>
+  <div class="navBox" onclick="location.href='tags.html'">
+    <h3>Tags</h3>
+  </div>
+  <div class="navBox" id="writeBox" onclick="location.href='write.html'">
+    <h3>Write a Note</h3>
+  </div>
+</div>
+
+<div id="nameModal" class="hidden">
+  <div id="modalBox">
+    <p>What should I call you?</p>
+    <input id="nameInput" type="text" placeholder="Your name">
+    <br>
+    <button onclick="saveName()">Continue</button>
+  </div>
+</div>
+
+<a href="settings.html" id="settingsButton"></a>
+
+<script>
+  const savedName = localStorage.getItem('userName');
+
+  if (!savedName) {
+    document.getElementById('nameModal').classList.remove('hidden');
+  } else {
+    document.getElementById('greetingText').textContent = 'Hi ' + savedName + ',';
+  }
+
+  function saveName() {
+    const name = document.getElementById('nameInput').value.trim();
+    if (name === '') {
+      return;
+    }
+    localStorage.setItem('userName', name);
+    document.getElementById('greetingText').textContent = 'Hi ' + name + ',';
+    document.getElementById('nameModal').classList.add('hidden');
+  }
+
+</script>
+
+</body>
+</html>

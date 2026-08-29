@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Write a Note - Alexandria</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: white;
+      font-family: "Times New Roman", Times, serif;
+      color: black;
+    }
+
+    #topBar {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#pageTitle {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+    #backBtn {
+      font-size: 1rem;
+      color: #4a6fa5;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    #formArea {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #formArea input,
+    #formArea textarea {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #999;
+      border-radius: 6px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    #formArea textarea {
+      resize: vertical;
+    }
+
+    #saveBtn {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1rem;
+      padding: 12px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #saveBtn:active {
+      background-color: #3a5a85;
+    }
+
+    #savedMsg {
+      text-align: center;
+      color: #4a6fa5;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="topBar">
+  <a id="backBtn" href="home.html">← Back</a>
+  <h1 id="pageTitle">Write a Note</h1>
+</div>
+
+<div id="formArea">
+  <input id="titleInput" type="text" placeholder="Title">
+  <textarea id="bodyInput" placeholder="Write your note..." rows="8"></textarea>
+  <input id="tagsInput" type="text" placeholder="Tags (comma separated)">
+  <button id="saveBtn" onclick="handleSave()">Save Note</button>
+  <p id="savedMsg">Saved!</p>
+</div>
+
+<script src="alexandria.js"></script>
+<script>
+  function handleSave() {
+    saveNote();
+
+    document.getElementById('titleInput').value = '';
+    document.getElementById('bodyInput').value = '';
+    document.getElementById('tagsInput').value = '';
+
+    const msg = document.getElementById('savedMsg');
+    msg.style.display = 'block';
+    setTimeout(function() {
+      msg.style.display = 'none';
+    }, 1500);
+  }
+</script>
+
+</body>
+</html>
